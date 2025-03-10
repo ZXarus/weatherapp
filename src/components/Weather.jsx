@@ -24,7 +24,7 @@ function Weather() {
         "09d": rain_icon,
         "09n": rain_icon,
         "10d": rain_icon,
-        "10d": rain_icon,
+        "10n": rain_icon,
         "13d": snow_icon,
         "13n": snow_icon,
     }
@@ -56,9 +56,6 @@ function Weather() {
             console.error("error in fetching data");
         }
     }
-    useEffect(() => {
-        search("Hyderabad")
-    }, [])
     return (
         <div className='weather'>
             <div className='search-b0x'>
@@ -66,7 +63,7 @@ function Weather() {
                 <img src={search_icon} alt="" onClick={()=>search(inputRef.current.value)} />
             </div>
             {weatherData?<>
-            <img src={clear_icon} alt='' className='weather-icon' />
+            <img src={weatherData.icon} alt='' className='weather-icon' />
             
             <p className='temperature'>{weatherData.temperature}°C</p>
             <p className='location'> {weatherData.location}</p>
