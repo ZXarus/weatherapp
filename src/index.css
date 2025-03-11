@@ -7,9 +7,24 @@
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
-.app
-{
+.app {
   min-height: 100vh;
   display: grid;
   background-color: rgb(234, 119, 19);
+  padding: calc(20px + 2vw);
+}
+@media (max-width: 576px) {
+  .app {
+    padding: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .app {
+    padding: calc(15px + 1.5vw);
+  }
+}
+@media (min-width: 992px) {
+  .app {
+    padding: calc(30px + 3vw);
+  }
 }
