@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Weather.css';
-import search_icon from '../assets/search.png';
 import humidity_icon from '../assets/humidity.png';
 import wind_icon from '../assets/wind.png';
 import clear_night_icon from '../assets/01n@2x.png';
@@ -19,6 +18,7 @@ function Weather() {
     const [weatherData, setWeatherData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [bgColor, setBgColor] = useState('#fff');
+    const [darkMode, setDarkMode] = useState(false);
 
     const allIcons = {
         "01d": clear_icon,
@@ -52,6 +52,42 @@ function Weather() {
             color = isNight ? "#5B0E0E" : "#D7263D";
         }
         setBgColor(color);
+    };
+
+    const getCookie = (name) => {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    };
+
+    const fetchWeatherByCoords = async (lat, lon) => {
+        setLoading(true);
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || "Location data not found.");
+                return;
+            }
+
+            const isNight = data.weather[0]?.icon?.includes('n');
+            const icon = allIcons[data.weather[0]?.icon] || cloud_icon;
+
+            setWeatherData({
+                humidity: data.main.humidity,
+                windSpeed: data.wind.speed,
+                temperature: Math.floor(data.main.temp),
+                location: data.name,
+                icon: icon
+            });
+
+            changeBackground(data.main.temp, isNight);
+        } catch (error) {
+            console.error("Error fetching weather by coords", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const search = async (city) => {
@@ -94,46 +130,39 @@ function Weather() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const { latitude, longitude } = position.coords;
-                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    alert(data.message || "Location data not found.");
-                    return;
-                }
-
-                const isNight = data.weather[0]?.icon?.includes('n');
-                const icon = allIcons[data.weather[0]?.icon] || cloud_icon;
-
-                setWeatherData({
-                    humidity: data.main.humidity,
-                    windSpeed: data.wind.speed,
-                    temperature: Math.floor(data.main.temp),
-                    location: data.name,
-                    icon: icon
-                });
-
-                changeBackground(data.main.temp, isNight);
+                fetchWeatherByCoords(latitude, longitude);
             });
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     };
 
+    useEffect(() => {
+        const lat = getCookie('lat');
+        const lon = getCookie('lon');
+        if (lat && lon) {
+            fetchWeatherByCoords(lat, lon);
+        }
+    }, []);
+
     return (
-        <div className='weather' style={{ backgroundColor: bgColor }}>
-            <div className='search-b0x'>
+        <div className={`weather ${darkMode ? 'dark' : 'light'}`} style={{ backgroundColor: bgColor }}>
+            <button className="mode-toggle" onClick={() => setDarkMode(!darkMode)}>
+                {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+            </button>
+
+            <div className='search-box'>
                 <input 
-                    ref={inputRef} 
-                    type='text' 
-                    placeholder='Search' 
-                    onChange={(e) => search(e.target.value)} // Search as you type
+                    ref={inputRef}
+                    type='text'
+                    placeholder='Search'
+                    onChange={(e) => search(e.target.value)}
                 />
-                <img src={search_icon} alt="Search" />
             </div>
+
             <button className='location-btn' onClick={getWeatherByLocation}>Use My Location</button>
             {loading && <p>Loading...</p>}
+
             {weatherData && (
                 <>
                     <img src={weatherData.icon} alt='' className='weather-icon' />
