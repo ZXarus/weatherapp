@@ -177,14 +177,8 @@ function Weather() {
     }, []);
 
     return (
-        <motion.div
-            className='weather'
-            style={{ backgroundColor: bgColor }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-        >
-            <div className='search-b0x'>
+        <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+            <motion.div className='search-b0x' initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                 <input
                     ref={inputRef}
                     type='text'
@@ -194,12 +188,20 @@ function Weather() {
                         setSearchInput(e.target.value);
                         setDebouncedSearch(e.target.value);
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            setDebouncedSearch(searchInput);
+                        }
+                    }}
                 />
-            </div>
-            <button className='location-btn' onClick={getWeatherByLocation}>Use My Location</button>
+            </motion.div>
+
+            <motion.button className='location-btn' onClick={getWeatherByLocation} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4 }}>
+                Use My Location
+            </motion.button>
 
             {recentSearches.length > 0 && (
-                <div style={{ marginTop: '10px', textAlign: 'center' }}>
+                <motion.div style={{ marginTop: '10px', textAlign: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
                     <strong style={{ color: 'white' }}>Recent:</strong>
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px', marginTop: '5px' }}>
                         {recentSearches.map((city, idx) => (
@@ -220,21 +222,22 @@ function Weather() {
                             </button>
                         ))}
                     </div>
-                </div>
+                </motion.div>
             )}
 
-            {loading && <p>Loading...</p>}
+            {loading && <motion.p animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1 }}>Loading...</motion.p>}
 
-            <AnimatePresence>
-                {weatherData && (
+            {weatherData && (
+                <AnimatePresence>
                     <motion.div
                         key="weather"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.6 }}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                     >
-                        <img src={weatherData.icon} alt='' className='weather-icon' />
+                        <img src={weatherData.icon} alt='' className='weather-icon' style={{ alignSelf: 'center' }} />
                         <p className='temperature'>{weatherData.temperature}°C</p>
                         <p className='location'>{weatherData.location}</p>
                         <div className='weather-data'>
@@ -254,8 +257,8 @@ function Weather() {
                             </div>
                         </div>
                     </motion.div>
-                )}
-            </AnimatePresence>
+                </AnimatePresence>
+            )}
         </motion.div>
     );
 }

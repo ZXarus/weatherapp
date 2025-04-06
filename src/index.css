@@ -1,30 +1,61 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
+
 .app {
   min-height: 100vh;
   display: grid;
-  background-color: rgb(234, 119, 19);
+  background: linear-gradient(to bottom right, rgb(9, 58, 193), #1799de);
   padding: calc(20px + 2vw);
 }
+
 @media (max-width: 576px) {
   .app {
     padding: 20px;
   }
+  .weather {
+    padding: 20px 15px;
+  }
 }
+
 @media (max-width: 768px) {
   .app {
     padding: calc(15px + 1.5vw);
   }
 }
+
 @media (min-width: 992px) {
   .app {
     padding: calc(30px + 3vw);
   }
+}
+
+.weather,
+.search-b0x input,
+.location-btn {
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.temperature {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.weather-icon {
+  transition: transform 0.3s ease;
+}
+
+.weather-icon:hover {
+  transform: scale(1.05);
 }
