@@ -18,7 +18,6 @@ function Weather() {
     const [weatherData, setWeatherData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [bgColor, setBgColor] = useState('#fff');
-    const [darkMode, setDarkMode] = useState(false);
 
     const allIcons = {
         "01d": clear_icon,
@@ -40,17 +39,11 @@ function Weather() {
 
     const changeBackground = (temp, isNight) => {
         let color;
-        if (temp < 10) {
-            color = isNight ? "#0e3482" : "#00509E";
-        } else if (temp < 20) {
-            color = isNight ? "#12274A" : "#4A90E2";
-        } else if (temp < 30) {
-            color = isNight ? "#1C3D2C" : "#28A745";
-        } else if (temp < 40) {
-            color = isNight ? "#9A5900" : "#F39C12";
-        } else {
-            color = isNight ? "#5B0E0E" : "#D7263D";
-        }
+        if (temp < 10) color = isNight ? "#0e3482" : "#00509E";
+        else if (temp < 20) color = isNight ? "#12274A" : "#4A90E2";
+        else if (temp < 30) color = isNight ? "#1C3D2C" : "#28A745";
+        else if (temp < 40) color = isNight ? "#9A5900" : "#F39C12";
+        else color = isNight ? "#5B0E0E" : "#D7263D";
         setBgColor(color);
     };
 
@@ -82,6 +75,9 @@ function Weather() {
                 icon: icon
             });
 
+            document.cookie = `lat=${lat}; path=/`;
+            document.cookie = `lon=${lon}; path=/`;
+
             changeBackground(data.main.temp, isNight);
         } catch (error) {
             console.error("Error fetching weather by coords", error);
@@ -91,9 +87,7 @@ function Weather() {
     };
 
     const search = async (city) => {
-        if (city.trim() === "") {
-            return;
-        }
+        if (city.trim() === "") return;
         setLoading(true);
         try {
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
@@ -106,8 +100,7 @@ function Weather() {
             }
 
             const isNight = data.weather[0]?.icon?.includes('n');
-            const defaultIcon = isNight ? clear_night_icon : clear_icon;
-            const icon = allIcons[data.weather[0]?.icon] || defaultIcon;
+            const icon = allIcons[data.weather[0]?.icon] || clear_icon;
 
             setWeatherData({
                 humidity: data.main.humidity,
@@ -128,9 +121,8 @@ function Weather() {
 
     const getWeatherByLocation = () => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const { latitude, longitude } = position.coords;
-                fetchWeatherByCoords(latitude, longitude);
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                fetchWeatherByCoords(coords.latitude, coords.longitude);
             });
         } else {
             alert("Geolocation is not supported by this browser.");
@@ -146,23 +138,19 @@ function Weather() {
     }, []);
 
     return (
-        <div className={`weather ${darkMode ? 'dark' : 'light'}`} style={{ backgroundColor: bgColor }}>
-            <button className="mode-toggle" onClick={() => setDarkMode(!darkMode)}>
-                {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
-            </button>
-
+        <div className='weather' style={{ backgroundColor: bgColor }}>
             <div className='search-box'>
-                <input 
+                <input
                     ref={inputRef}
                     type='text'
-                    placeholder='Search'
+                    placeholder='Search City'
                     onChange={(e) => search(e.target.value)}
                 />
             </div>
-
-            <button className='location-btn' onClick={getWeatherByLocation}>Use My Location</button>
+            <button className='location-btn' onClick={getWeatherByLocation}>
+                Use My Location
+            </button>
             {loading && <p>Loading...</p>}
-
             {weatherData && (
                 <>
                     <img src={weatherData.icon} alt='' className='weather-icon' />
@@ -170,14 +158,14 @@ function Weather() {
                     <p className='location'>{weatherData.location}</p>
                     <div className='weather-data'>
                         <div className="col">
-                            <img src={humidity_icon} alt="" />
+                            <img src={humidity_icon} alt="Humidity" />
                             <div>
                                 <p>{weatherData.humidity}%</p>
                                 <span>Humidity</span>
                             </div>
                         </div>
                         <div className="col">
-                            <img src={wind_icon} alt="" />
+                            <img src={wind_icon} alt="Wind Speed" />
                             <div>
                                 <p>{weatherData.windSpeed}Km/H</p>
                                 <span>Wind Speed</span>
