@@ -2,123 +2,113 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     transition: background-color 0.5s ease-in-out;
 }
 
-/* Main Weather Container */
+.weather-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Weather Card Styling */
 .weather {
-    padding: 40px;
-    margin: 20px;
+    padding: 30px;
+    margin: 0 auto;
     border-radius: 20px;
     background: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 800px;
-    width: 100%;
     box-sizing: border-box;
-    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    max-width: 500px;
+    width: 90%;
+    transition: background-color 0.5s ease-in-out;
 }
 
-/* Responsive */
-@media (max-width: 576px) {
-    .weather {
-        padding: 20px;
-    }
-}
-
-@media (min-width: 768px) {
-    .weather {
-        padding: 30px;
-    }
-}
-
-/* Search Input */
-.search-box {
+/* Search Box */
+.search-b0x {
     width: 100%;
-    margin-bottom: 15px;
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
-.search-box input {
+.search-b0x input {
     width: 100%;
-    max-width: 400px;
+    max-width: 350px;
     height: 40px;
-    padding: 0 20px;
+    padding-left: 20px;
     border: none;
-    border-radius: 50px;
-    font-size: 16px;
-    background: rgb(225, 214, 7);
-    color: #000;
     outline: none;
+    border-radius: 50px;
+    background: rgb(225, 214, 7);
+    font-size: 16px;
     transition: background 0.3s;
 }
 
-.search-box input:hover {
+.search-b0x input:hover {
     background: #6ef227;
 }
 
-/* Weather Info */
+.location-btn {
+    margin: 10px 0;
+    width: 100%;
+    max-width: 350px;
+    height: 40px;
+    background: rgb(4, 220, 227);
+    color: rgb(47, 28, 5);
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.location-btn:hover {
+    background: #279ec9;
+}
+
 .weather-icon {
     width: 120px;
     margin: 20px 0;
 }
 
 .temperature {
-    font-size: 28px;
     color: floralwhite;
+    font-size: 28px;
 }
 
 .location {
-    font-size: 18px;
     color: floralwhite;
+    font-size: 18px;
     margin-bottom: 10px;
 }
 
 .weather-data {
+    width: 100%;
+    color: #912b14;
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
-    color: #912b14;
+    margin-top: 10px;
 }
 
 .weather-data .col {
     display: flex;
+    align-items: center;
     gap: 10px;
-    font-size: 18px;
-    align-items: flex-start;
+    font-size: 16px;
 }
 
 .weather-data .col span {
+    display: block;
     font-size: 12px;
 }
 
 .weather-data .col img {
     width: 20px;
-    margin-top: 8px;
-}
-
-/* Location Button */
-.location-btn {
-    width: 100%;
-    max-width: 400px;
-    height: 40px;
-    margin-bottom: 20px;
-    border: none;
-    border-radius: 50px;
-    font-size: 14px;
-    color: rgb(47, 28, 5);
-    background: rgb(4, 220, 227);
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.location-btn:hover {
-    background: #279ec9;
 }

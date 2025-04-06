@@ -39,11 +39,17 @@ function Weather() {
 
     const changeBackground = (temp, isNight) => {
         let color;
-        if (temp < 10) color = isNight ? "#0e3482" : "#00509E";
-        else if (temp < 20) color = isNight ? "#12274A" : "#4A90E2";
-        else if (temp < 30) color = isNight ? "#1C3D2C" : "#28A745";
-        else if (temp < 40) color = isNight ? "#9A5900" : "#F39C12";
-        else color = isNight ? "#5B0E0E" : "#D7263D";
+        if (temp < 10) {
+            color = isNight ? "#0e3482" : "#00509E";
+        } else if (temp < 20) {
+            color = isNight ? "#12274A" : "#4A90E2";
+        } else if (temp < 30) {
+            color = isNight ? "#1C3D2C" : "#28A745";
+        } else if (temp < 40) {
+            color = isNight ? "#9A5900" : "#F39C12";
+        } else {
+            color = isNight ? "#5B0E0E" : "#D7263D";
+        }
         setBgColor(color);
     };
 
@@ -75,9 +81,6 @@ function Weather() {
                 icon: icon
             });
 
-            document.cookie = `lat=${lat}; path=/`;
-            document.cookie = `lon=${lon}; path=/`;
-
             changeBackground(data.main.temp, isNight);
         } catch (error) {
             console.error("Error fetching weather by coords", error);
@@ -87,7 +90,9 @@ function Weather() {
     };
 
     const search = async (city) => {
-        if (city.trim() === "") return;
+        if (city.trim() === "") {
+            return;
+        }
         setLoading(true);
         try {
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
@@ -100,7 +105,8 @@ function Weather() {
             }
 
             const isNight = data.weather[0]?.icon?.includes('n');
-            const icon = allIcons[data.weather[0]?.icon] || clear_icon;
+            const defaultIcon = isNight ? clear_night_icon : clear_icon;
+            const icon = allIcons[data.weather[0]?.icon] || defaultIcon;
 
             setWeatherData({
                 humidity: data.main.humidity,
@@ -121,8 +127,9 @@ function Weather() {
 
     const getWeatherByLocation = () => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                fetchWeatherByCoords(coords.latitude, coords.longitude);
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                fetchWeatherByCoords(latitude, longitude);
             });
         } else {
             alert("Geolocation is not supported by this browser.");
@@ -138,42 +145,42 @@ function Weather() {
     }, []);
 
     return (
-        <div className='weather' style={{ backgroundColor: bgColor }}>
-            <div className='search-box'>
-                <input
-                    ref={inputRef}
-                    type='text'
-                    placeholder='Search City'
-                    onChange={(e) => search(e.target.value)}
-                />
+        <div className="weather-container">
+            <div className='weather' style={{ backgroundColor: bgColor }}>
+                <div className='search-b0x'>
+                    <input 
+                        ref={inputRef} 
+                        type='text' 
+                        placeholder='Search' 
+                        onChange={(e) => search(e.target.value)}
+                    />
+                </div>
+                <button className='location-btn' onClick={getWeatherByLocation}>Use My Location</button>
+                {loading && <p>Loading...</p>}
+                {weatherData && (
+                    <>
+                        <img src={weatherData.icon} alt='' className='weather-icon' />
+                        <p className='temperature'>{weatherData.temperature}°C</p>
+                        <p className='location'>{weatherData.location}</p>
+                        <div className='weather-data'>
+                            <div className="col">
+                                <img src={humidity_icon} alt="" />
+                                <div>
+                                    <p>{weatherData.humidity}%</p>
+                                    <span>Humidity</span>
+                                </div>
+                            </div>
+                            <div className="col">
+                                <img src={wind_icon} alt="" />
+                                <div>
+                                    <p>{weatherData.windSpeed}Km/H</p>
+                                    <span>Wind Speed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
-            <button className='location-btn' onClick={getWeatherByLocation}>
-                Use My Location
-            </button>
-            {loading && <p>Loading...</p>}
-            {weatherData && (
-                <>
-                    <img src={weatherData.icon} alt='' className='weather-icon' />
-                    <p className='temperature'>{weatherData.temperature}°C</p>
-                    <p className='location'>{weatherData.location}</p>
-                    <div className='weather-data'>
-                        <div className="col">
-                            <img src={humidity_icon} alt="Humidity" />
-                            <div>
-                                <p>{weatherData.humidity}%</p>
-                                <span>Humidity</span>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <img src={wind_icon} alt="Wind Speed" />
-                            <div>
-                                <p>{weatherData.windSpeed}Km/H</p>
-                                <span>Wind Speed</span>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
         </div>
     );
 }
