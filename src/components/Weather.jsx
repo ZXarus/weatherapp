@@ -12,12 +12,16 @@ import cloud_icon from '../assets/cloud.png';
 import drizzle_icon from '../assets/drizzle.png';
 import rain_icon from '../assets/rain.png';
 import clear_icon from '../assets/clear.png';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Weather() {
     const inputRef = useRef();
+    const [searchInput, setSearchInput] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [bgColor, setBgColor] = useState('#fff');
+    const [recentSearches, setRecentSearches] = useState([]);
 
     const allIcons = {
         "01d": clear_icon,
@@ -58,6 +62,21 @@ function Weather() {
         return match ? match[2] : null;
     };
 
+    useEffect(() => {
+        const saved = localStorage.getItem('recentSearches');
+        if (saved) {
+            setRecentSearches(JSON.parse(saved));
+        }
+    }, []);
+
+    const saveToRecentSearches = (city) => {
+        let updated = [...recentSearches.filter(item => item.toLowerCase() !== city.toLowerCase())];
+        updated.unshift(city);
+        if (updated.length > 5) updated = updated.slice(0, 5);
+        setRecentSearches(updated);
+        localStorage.setItem('recentSearches', JSON.stringify(updated));
+    };
+
     const fetchWeatherByCoords = async (lat, lon) => {
         setLoading(true);
         try {
@@ -90,9 +109,7 @@ function Weather() {
     };
 
     const search = async (city) => {
-        if (city.trim() === "") {
-            return;
-        }
+        if (city.trim() === "") return;
         setLoading(true);
         try {
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
@@ -117,6 +134,7 @@ function Weather() {
             });
 
             changeBackground(data.main.temp, isNight);
+            saveToRecentSearches(data.name);
         } catch (error) {
             setWeatherData(null);
             console.error("Error in fetching data");
@@ -124,6 +142,15 @@ function Weather() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (debouncedSearch) {
+                search(debouncedSearch);
+            }
+        }, 700);
+        return () => clearTimeout(handler);
+    }, [debouncedSearch]);
 
     const getWeatherByLocation = () => {
         if (navigator.geolocation) {
@@ -136,6 +163,11 @@ function Weather() {
         }
     };
 
+    const handleRecentClick = (city) => {
+        setSearchInput(city);
+        setDebouncedSearch(city);
+    };
+
     useEffect(() => {
         const lat = getCookie('lat');
         const lon = getCookie('lon');
@@ -145,20 +177,63 @@ function Weather() {
     }, []);
 
     return (
-        <div className="weather-container">
-            <div className='weather' style={{ backgroundColor: bgColor }}>
-                <div className='search-b0x'>
-                    <input 
-                        ref={inputRef} 
-                        type='text' 
-                        placeholder='Search' 
-                        onChange={(e) => search(e.target.value)}
-                    />
+        <motion.div
+            className='weather'
+            style={{ backgroundColor: bgColor }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+        >
+            <div className='search-b0x'>
+                <input
+                    ref={inputRef}
+                    type='text'
+                    placeholder='Search'
+                    value={searchInput}
+                    onChange={(e) => {
+                        setSearchInput(e.target.value);
+                        setDebouncedSearch(e.target.value);
+                    }}
+                />
+            </div>
+            <button className='location-btn' onClick={getWeatherByLocation}>Use My Location</button>
+
+            {recentSearches.length > 0 && (
+                <div style={{ marginTop: '10px', textAlign: 'center' }}>
+                    <strong style={{ color: 'white' }}>Recent:</strong>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px', marginTop: '5px' }}>
+                        {recentSearches.map((city, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => handleRecentClick(city)}
+                                style={{
+                                    background: 'rgba(255,255,255,0.2)',
+                                    border: 'none',
+                                    borderRadius: '20px',
+                                    padding: '5px 12px',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    fontSize: '13px'
+                                }}
+                            >
+                                {city}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-                <button className='location-btn' onClick={getWeatherByLocation}>Use My Location</button>
-                {loading && <p>Loading...</p>}
+            )}
+
+            {loading && <p>Loading...</p>}
+
+            <AnimatePresence>
                 {weatherData && (
-                    <>
+                    <motion.div
+                        key="weather"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
                         <img src={weatherData.icon} alt='' className='weather-icon' />
                         <p className='temperature'>{weatherData.temperature}°C</p>
                         <p className='location'>{weatherData.location}</p>
@@ -178,10 +253,10 @@ function Weather() {
                                 </div>
                             </div>
                         </div>
-                    </>
+                    </motion.div>
                 )}
-            </div>
-        </div>
+            </AnimatePresence>
+        </motion.div>
     );
 }
 
