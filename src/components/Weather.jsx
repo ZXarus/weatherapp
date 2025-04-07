@@ -44,22 +44,35 @@ function Weather() {
     const changeBackground = (temp, isNight) => {
         let color;
         if (temp < 10) {
-            color = isNight ? "#0e3482" : "#00509E";
+            color = isNight ? "#0D47A1" : "#4FC3F7";
         } else if (temp < 20) {
-            color = isNight ? "#12274A" : "#4A90E2";
+            color = isNight ? "#1E88E5" : "#64B5F6";
         } else if (temp < 30) {
-            color = isNight ? "#1C3D2C" : "#28A745";
+            color = isNight ? "#388E3C" : "#81C784";
         } else if (temp < 40) {
-            color = isNight ? "#9A5900" : "#F39C12";
+            color = isNight ? "#BF360C" : "#FF8F00";
         } else {
-            color = isNight ? "#5B0E0E" : "#D7263D";
+            color = isNight ? "#B71C1C" : "#E53935";
         }
         setBgColor(color);
     };
+    
 
     const getCookie = (name) => {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         return match ? match[2] : null;
+    };
+
+    const clearCookies = () => {
+        document.cookie = 'lat=; path=/; max-age=0';
+        document.cookie = 'lon=; path=/; max-age=0';
+    };
+
+    const resetLocation = () => {
+        clearCookies();
+        setWeatherData(null);
+        setSearchInput('');
+        setDebouncedSearch('');
     };
 
     useEffect(() => {
@@ -175,6 +188,13 @@ function Weather() {
             fetchWeatherByCoords(lat, lon);
         }
     }, []);
+    <motion.div
+    className='weather'
+    style={{ backgroundColor: bgColor, alignItems: 'center' }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6 }}
+></motion.div>
 
     return (
         <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
@@ -196,12 +216,46 @@ function Weather() {
                 />
             </motion.div>
 
-            <motion.button className='location-btn' onClick={getWeatherByLocation} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4 }}>
+            <motion.button
+                style={{
+                    marginTop: '10px',
+                    padding: '8px 14px',
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                }}
+                onClick={getWeatherByLocation}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+            >
                 Use My Location
             </motion.button>
 
+            <motion.button
+                style={{
+                    marginTop: '10px',
+                    padding: '8px 14px',
+                    backgroundColor: '#ff4d4d',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                }}
+                onClick={resetLocation}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+            >
+                Reset Location
+            </motion.button>
+
             {recentSearches.length > 0 && (
-                <motion.div style={{ marginTop: '10px', textAlign: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                <motion.div style={{ marginTop: '10px', textAlign: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
                     <strong style={{ color: 'white' }}>Recent:</strong>
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px', marginTop: '5px' }}>
                         {recentSearches.map((city, idx) => (
@@ -237,7 +291,7 @@ function Weather() {
                         transition={{ duration: 0.6 }}
                         style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                     >
-                        <img src={weatherData.icon} alt='' className='weather-icon' style={{ alignSelf: 'center' }} />
+                        <img src={weatherData.icon} alt='' className='weather-icon' />
                         <p className='temperature'>{weatherData.temperature}°C</p>
                         <p className='location'>{weatherData.location}</p>
                         <div className='weather-data'>
