@@ -22,18 +22,6 @@ function Weather() {
     const [loading, setLoading] = useState(false);
     const [bgColor, setBgColor] = useState('#fff');
     const [recentSearches, setRecentSearches] = useState([]);
-
-    const weatherQuotes = [
-        "Some people feel the rain. Others just get wet. – Bob Marley",
-        "Wherever you go, no matter what the weather, always bring your own sunshine. – Anthony J. D’Angelo",
-        "There’s no such thing as bad weather, only different kinds of good weather. – John Ruskin",
-        "The sun always shines above the clouds. – Paul F. Davis",
-        "A change in the weather is sufficient to recreate the world and ourselves. – Marcel Proust",
-        "To appreciate the beauty of a snowflake, it is necessary to stand out in the cold. – Aristotle",
-        "After rain comes sunshine; after darkness comes the glorious dawn. – Thomas Carlyle",
-        "Sunshine is delicious, rain is refreshing, wind braces us up, snow is exhilarating. – John Ruskin",
-    ];
-
     const [quote, setQuote] = useState('');
 
     const allIcons = {
@@ -52,7 +40,7 @@ function Weather() {
         "11d": thunderstorm_icon,
         "13d": snow_icon,
         "13n": snow_icon,
-    };
+    };  
 
     const changeBackground = (temp, isNight) => {
         let color;
@@ -69,7 +57,17 @@ function Weather() {
         }
         setBgColor(color);
     };
-    
+
+    const quotes = [
+        "Weather is a great metaphor for life – it’s unpredictable.",
+        "There is no such thing as bad weather, only different kinds of good weather.",
+        "Sunshine is delicious, rain is refreshing, wind braces us up.",
+        "Some people feel the rain. Others just get wet.",
+        "Climate is what we expect, weather is what we get.",
+        "Rain is grace; rain is the sky descending to the earth.",
+        "Wherever you go, no matter what the weather, always bring your own sunshine.",
+        "Nature is so powerful, so strong. Capturing its essence is not easy."
+    ];
 
     const getCookie = (name) => {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -167,6 +165,9 @@ function Weather() {
                 document.cookie = `lon=${data.coord.lon}; path=/; max-age=86400`;
             }
 
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            setQuote(quotes[randomIndex]);
+
         } catch (error) {
             setWeatherData(null);
             console.error("Error in fetching data");
@@ -209,13 +210,6 @@ function Weather() {
             fetchWeatherByCoords(lat, lon);
         }
     }, []);
-    <motion.div
-    className='weather'
-    style={{ backgroundColor: bgColor, alignItems: 'center' }}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.6 }}
-></motion.div>
 
     return (
         <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
@@ -298,6 +292,12 @@ function Weather() {
                         ))}
                     </div>
                 </motion.div>
+            )}
+
+            {quote && (
+                <motion.p style={{ color: 'white', marginTop: '15px', fontStyle: 'italic' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                    "{quote}"
+                </motion.p>
             )}
 
             {loading && <motion.p animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1 }}>Loading...</motion.p>}
