@@ -23,6 +23,19 @@ function Weather() {
     const [bgColor, setBgColor] = useState('#fff');
     const [recentSearches, setRecentSearches] = useState([]);
 
+    const weatherQuotes = [
+        "Some people feel the rain. Others just get wet. – Bob Marley",
+        "Wherever you go, no matter what the weather, always bring your own sunshine. – Anthony J. D’Angelo",
+        "There’s no such thing as bad weather, only different kinds of good weather. – John Ruskin",
+        "The sun always shines above the clouds. – Paul F. Davis",
+        "A change in the weather is sufficient to recreate the world and ourselves. – Marcel Proust",
+        "To appreciate the beauty of a snowflake, it is necessary to stand out in the cold. – Aristotle",
+        "After rain comes sunshine; after darkness comes the glorious dawn. – Thomas Carlyle",
+        "Sunshine is delicious, rain is refreshing, wind braces us up, snow is exhilarating. – John Ruskin",
+    ];
+
+    const [quote, setQuote] = useState('');
+
     const allIcons = {
         "01d": clear_icon,
         "01n": clear_night_icon,
@@ -148,6 +161,12 @@ function Weather() {
 
             changeBackground(data.main.temp, isNight);
             saveToRecentSearches(data.name);
+
+            if (data.coord?.lat && data.coord?.lon) {
+                document.cookie = `lat=${data.coord.lat}; path=/; max-age=86400`; // 1 day
+                document.cookie = `lon=${data.coord.lon}; path=/; max-age=86400`;
+            }
+
         } catch (error) {
             setWeatherData(null);
             console.error("Error in fetching data");
@@ -169,6 +188,8 @@ function Weather() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const { latitude, longitude } = position.coords;
+                document.cookie = `lat=${latitude}; path=/; max-age=86400`;
+                document.cookie = `lon=${longitude}; path=/; max-age=86400`;
                 fetchWeatherByCoords(latitude, longitude);
             });
         } else {
