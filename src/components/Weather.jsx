@@ -364,21 +364,26 @@ function Weather() {
         </AnimatePresence>
       )}
 
-      {/* 5-Day Forecast */}
-      {forecastData.length > 0 && (
-        <motion.div className="forecast-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-          <h3 style={{ color: 'white', textAlign: 'center' }}>5-Day Forecast</h3>
-          <div className="forecast-grid">
-            {forecastData.map((item, idx) => (
-              <div key={idx} className="forecast-item">
-                <p>{new Date(item.dt_txt).toLocaleDateString()}</p>
-                <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
-                <p>{Math.round(item.main.temp)}°C</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      )}
+{forecastData.length > 0 && (
+  <motion.div
+    className="forecast-wrapper"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.5 }}
+  >
+    <h3 className="forecast-title">5-Day Forecast</h3>
+    <div className="forecast-scroll">
+      {forecastData.map((item, idx) => (
+        <div key={idx} className="forecast-card">
+          <p>{new Date(item.dt_txt).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+          <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
+          <p>{Math.round(item.main.temp)}°C</p>
+        </div>
+      ))}
+    </div>
+  </motion.div>
+)}
+
     </motion.div>
   );
 }
