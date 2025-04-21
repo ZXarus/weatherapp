@@ -364,5 +364,75 @@ body {
     width: 50px;
     height: 50px;
   }
+  @media (max-width: 576px) {
+    .weather {
+        padding: 20px;
+        margin: 10px;
+        max-width: 100%;
+        font-size: calc(12px + 1vw);
+    }
+
+    .search-b0x input {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 15px;
+        font-size: 14px;
+    }
+
+    .temperature {
+        font-size: 24px;
+    }
+
+    .weather-data {
+        flex-direction: column;
+        gap: 10px;
+        font-size: 16px;
+    }
+
+    .weather-data .col {
+        font-size: 14px;
+    }
+
+    .location-btn {
+        width: 100%;
+        font-size: 14px;
+    }
+}
+.forecast-wrapper {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .forecast-title {
+    font-size: 1.5em;
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  .forecast-scroll {
+    display: flex;
+    flex-direction: column; /* Align forecast items vertically */
+    gap: 15px; /* Add space between forecast items */
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  .forecast-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+  }
+  
+  .forecast-card img {
+    width: 50px;
+    margin-bottom: 10px;
+  }
+  
+  .forecast-card p {
+    margin: 0;
+  }
   
   
