@@ -300,3 +300,28 @@ body {
     0%, 90%, 100% { opacity: 0; }
     45%, 55% { opacity: 1; }
 }
+.forecast-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .forecast-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  
+  .forecast-card {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 10px;
+    width: 80px;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
