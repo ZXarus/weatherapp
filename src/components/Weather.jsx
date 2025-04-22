@@ -19,44 +19,21 @@ function Weather() {
   const [searchInput, setSearchInput] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [weatherData, setWeatherData] = useState(null);
-  const [forecastData, setForecastData] = useState([]); // 🔁 Added for 5-day forecast
+  const [forecastData, setForecastData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [bgColor, setBgColor] = useState('#fff');
   const [recentSearches, setRecentSearches] = useState([]);
   const [quote, setQuote] = useState('');
 
   const allIcons = {
-    "01d": clear_icon,
-    "01n": clear_night_icon,
-    "02d": cloud_icon,
-    "02n": few_clouds_night_icon,
-    "03d": cloud_icon,
-    "03n": scattered_clouds_night_icon,
-    "04d": drizzle_icon,
-    "04n": drizzle_icon,
-    "09d": rain_icon,
-    "09n": shower_rain_night_icon,
-    "10d": rain_icon,
-    "10n": rain_icon,
+    "01d": clear_icon, "01n": clear_night_icon,
+    "02d": cloud_icon, "02n": few_clouds_night_icon,
+    "03d": cloud_icon, "03n": scattered_clouds_night_icon,
+    "04d": drizzle_icon, "04n": drizzle_icon,
+    "09d": rain_icon, "09n": shower_rain_night_icon,
+    "10d": rain_icon, "10n": rain_icon,
     "11d": thunderstorm_icon,
-    "13d": snow_icon,
-    "13n": snow_icon,
-  };
-
-  const changeBackground = (temp, isNight) => {
-    let color;
-    if (temp < 10) {
-      color = isNight ? "#0D47A1" : "#4FC3F7";
-    } else if (temp < 20) {
-      color = isNight ? "#1E88E5" : "#64B5F6";
-    } else if (temp < 30) {
-      color = isNight ? "#388E3C" : "#81C784";
-    } else if (temp < 40) {
-      color = isNight ? "#BF360C" : "#FF8F00";
-    } else {
-      color = isNight ? "#B71C1C" : "#E53935";
-    }
-    setBgColor(color);
+    "13d": snow_icon, "13n": snow_icon,
   };
 
   const quotes = [
@@ -69,6 +46,19 @@ function Weather() {
     "Wherever you go, no matter what the weather, always bring your own sunshine.",
     "Nature is so powerful, so strong. Capturing its essence is not easy."
   ];
+
+  const changeBackground = (temp, isNight) => {
+    const color = temp < 10
+      ? isNight ? "#0D47A1" : "#4FC3F7"
+      : temp < 20
+      ? isNight ? "#1E88E5" : "#64B5F6"
+      : temp < 30
+      ? isNight ? "#388E3C" : "#81C784"
+      : temp < 40
+      ? isNight ? "#BF360C" : "#FF8F00"
+      : isNight ? "#B71C1C" : "#E53935";
+    setBgColor(color);
+  };
 
   const getCookie = (name) => {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -91,9 +81,7 @@ function Weather() {
 
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
-    if (saved) {
-      setRecentSearches(JSON.parse(saved));
-    }
+    if (saved) setRecentSearches(JSON.parse(saved));
   }, []);
 
   const saveToRecentSearches = (city) => {
@@ -107,14 +95,10 @@ function Weather() {
   const fetchWeatherByCoords = async (lat, lon) => {
     setLoading(true);
     try {
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-      const response = await fetch(url);
+      const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+      const response = await fetch(weatherUrl);
       const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.message || "Location data not found.");
-        return;
-      }
+      if (!response.ok) return alert(data.message || "Location data not found.");
 
       const isNight = data.weather[0]?.icon?.includes('n');
       const icon = allIcons[data.weather[0]?.icon] || cloud_icon;
@@ -124,24 +108,21 @@ function Weather() {
         windSpeed: data.wind.speed,
         temperature: Math.floor(data.main.temp),
         location: data.name,
-        icon: icon
+        icon,
       });
 
       changeBackground(data.main.temp, isNight);
 
-      // 🔁 Fetch 5-day forecast after fetching current weather data
       const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
       const forecastRes = await fetch(forecastUrl);
       const forecastJson = await forecastRes.json();
-
       if (forecastRes.ok) {
         const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
         setForecastData(dailyForecasts);
       }
+
       const randomIndex = Math.floor(Math.random() * quotes.length);
-    setQuote(quotes[randomIndex]);
-
-
+      setQuote(quotes[randomIndex]);
     } catch (error) {
       console.error("Error fetching weather by coords", error);
     } finally {
@@ -150,17 +131,13 @@ function Weather() {
   };
 
   const search = async (city) => {
-    if (city.trim() === "") return;
+    if (!city.trim()) return;
     setLoading(true);
     try {
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
       const response = await fetch(url);
       const data = await response.json();
-
-      if (!response.ok) {
-        setLoading(false);
-        return;
-      }
+      if (!response.ok) return;
 
       const isNight = data.weather[0]?.icon?.includes('n');
       const defaultIcon = isNight ? clear_night_icon : clear_icon;
@@ -171,7 +148,7 @@ function Weather() {
         windSpeed: data.wind.speed,
         temperature: Math.floor(data.main.temp),
         location: data.name,
-        icon: icon
+        icon,
       });
 
       changeBackground(data.main.temp, isNight);
@@ -185,19 +162,17 @@ function Weather() {
       const randomIndex = Math.floor(Math.random() * quotes.length);
       setQuote(quotes[randomIndex]);
 
-      // 🔁 Fetch 5-day forecast after fetching current weather data
       const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
       const forecastRes = await fetch(forecastUrl);
       const forecastJson = await forecastRes.json();
-
       if (forecastRes.ok) {
         const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
         setForecastData(dailyForecasts);
       }
 
     } catch (error) {
-      setWeatherData(null);
       console.error("Error in fetching data");
+      setWeatherData(null);
     } finally {
       setLoading(false);
     }
@@ -205,20 +180,18 @@ function Weather() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (debouncedSearch) {
-        search(debouncedSearch);
-      }
+      if (debouncedSearch) search(debouncedSearch);
     }, 700);
     return () => clearTimeout(handler);
   }, [debouncedSearch]);
 
   const getWeatherByLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
+      navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         document.cookie = `lat=${latitude}; path=/; max-age=86400`;
         document.cookie = `lon=${longitude}; path=/; max-age=86400`;
-        fetchWeatherByCoords(latitude, longitude); // Fetch current weather and forecast
+        fetchWeatherByCoords(latitude, longitude);
       });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -233,9 +206,7 @@ function Weather() {
   useEffect(() => {
     const lat = getCookie('lat');
     const lon = getCookie('lon');
-    if (lat && lon) {
-      fetchWeatherByCoords(lat, lon); // Fetch weather and forecast by location on page load
-    }
+    if (lat && lon) fetchWeatherByCoords(lat, lon);
   }, []);
 
   return (
@@ -250,25 +221,12 @@ function Weather() {
             setSearchInput(e.target.value);
             setDebouncedSearch(e.target.value);
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              setDebouncedSearch(searchInput);
-            }
-          }}
+          onKeyDown={(e) => e.key === 'Enter' && setDebouncedSearch(searchInput)}
         />
       </motion.div>
 
       <motion.button
-        style={{
-          marginTop: '10px',
-          padding: '8px 14px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '20px',
-          cursor: 'pointer',
-          fontWeight: 500,
-        }}
+        style={{ marginTop: '10px', padding: '8px 14px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 500 }}
         onClick={getWeatherByLocation}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -278,16 +236,7 @@ function Weather() {
       </motion.button>
 
       <motion.button
-        style={{
-          marginTop: '10px',
-          padding: '8px 14px',
-          backgroundColor: '#ff4d4d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '20px',
-          cursor: 'pointer',
-          fontWeight: 500,
-        }}
+        style={{ marginTop: '10px', padding: '8px 14px', backgroundColor: '#ff4d4d', color: 'white', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 500 }}
         onClick={resetLocation}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -296,7 +245,6 @@ function Weather() {
         Reset Location
       </motion.button>
 
-      {/* Recent Searches */}
       {recentSearches.length > 0 && (
         <motion.div style={{ marginTop: '10px', textAlign: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
           <strong style={{ color: 'white' }}>Recent:</strong>
@@ -305,15 +253,7 @@ function Weather() {
               <button
                 key={idx}
                 onClick={() => handleRecentClick(city)}
-                style={{
-                  background: 'rgba(255,255,255,0.2)',
-                  border: 'none',
-                  borderRadius: '20px',
-                  padding: '5px 12px',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontSize: '13px'
-                }}
+                style={{ background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '20px', padding: '5px 12px', color: 'white', cursor: 'pointer', fontSize: '13px' }}
               >
                 {city}
               </button>
@@ -322,7 +262,6 @@ function Weather() {
         </motion.div>
       )}
 
-      {/* Quote */}
       {quote && (
         <motion.p style={{ color: 'white', marginTop: '15px', fontStyle: 'italic' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
           "{quote}"
@@ -333,57 +272,42 @@ function Weather() {
 
       {weatherData && (
         <AnimatePresence>
-          <motion.div
-            key="weather"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-          >
-            <img src={weatherData.icon} alt='' className='weather-icon' />
-            <p className='temperature'>{weatherData.temperature}°C</p>
-            <p className='location'>{weatherData.location}</p>
-            <div className='weather-data'>
-              <div className="col">
-                <img src={humidity_icon} alt="" />
-                <div>
-                  <p>{weatherData.humidity}%</p>
-                  <span>Humidity</span>
-                </div>
-              </div>
-              <div className="col">
-                <img src={wind_icon} alt="" />
-                <div>
-                  <p>{weatherData.windSpeed}Km/H</p>
-                  <span>Wind Speed</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+         <motion.div key="weather" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  <p className='location'>{weatherData.location}</p>
+  <div className='weather-data'>
+    <div className="left-column">
+      <img src={weatherData.icon} alt="weather-icon" className='weather-icon' />
+      <p className='temperature'>{weatherData.temperature}°C</p>
+    </div>
+    <div className="right-column">
+      <div className="row">
+        <img src={humidity_icon} alt="humidity" />
+        <div><p>{weatherData.humidity}%</p><span>Humidity</span></div>
+      </div>
+      <div className="row">
+        <img src={wind_icon} alt="wind-speed" />
+        <div><p>{weatherData.windSpeed} Km/H</p><span>Wind Speed</span></div>
+      </div>
+    </div>
+  </div>
+</motion.div>
         </AnimatePresence>
       )}
 
-{forecastData.length > 0 && (
-  <motion.div
-    className="forecast-wrapper"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay: 0.5 }}
-  >
-    <h3 className="forecast-title">5-Day Forecast</h3>
-    <div className="forecast-scroll">
-      {forecastData.map((item, idx) => (
-        <div key={idx} className="forecast-card">
-          <p>{new Date(item.dt_txt).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</p>
-          <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
-          <p>{Math.round(item.main.temp)}°C</p>
-        </div>
-      ))}
-    </div>
-  </motion.div>
-)}
-
+      {forecastData.length > 0 && (
+        <motion.div className="forecast-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <h3 className="forecast-title">5-Day Forecast</h3>
+          <div className="forecast-scroll">
+            {forecastData.map((item, idx) => (
+              <div key={idx} className="forecast-card">
+                <p>{new Date(item.dt_txt).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+                <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
+                <p>{Math.round(item.main.temp)}°C</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

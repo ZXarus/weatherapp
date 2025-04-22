@@ -55,8 +55,6 @@ body {
     -webkit-backdrop-filter: blur(5px);
 }
 
-}
-
 .search-b0x input:focus {
     box-shadow: 0 0 8px rgba(110, 242, 39, 0.7);
 }
@@ -218,3 +216,79 @@ body {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+@media (prefers-contrast: more) {
+    .weather {
+        background: #ffffff;
+        color: #000000;
+    }
+}
+
+.forecast-scroll::-webkit-scrollbar {
+    display: none; /* hides scrollbar on mobile for cleaner look */
+}
+
+.search-b0x input::placeholder {
+    color: rgba(255, 255, 255, 0.9); /* a bit brighter */
+}
+
+.forecast-scroll {
+    scroll-behavior: smooth;
+}
+.extra-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .extra-info > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+  }
+  
+  .extra-info img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+  .weather-data {
+    display: flex;
+    align-items: center; /* Align items horizontally */
+    justify-content: center; /* Center content */
+    gap: 40px; /* Add some space between the left and right columns */
+  }
+  
+  .left-column {
+    display: flex;
+    flex-direction: column; /* Stack the image and temperature vertically */
+    align-items: center;
+  }
+  
+  .right-column {
+    display: flex;
+    gap: 20px; /* Space between humidity and wind speed */
+    align-items: center; /* Align items vertically in the center */
+  }
+  
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the space between icon and text */
+  }
+  
+  .row img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .location {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(10, 10, 10);
+  }
+  
