@@ -55,8 +55,9 @@ function Weather() {
       : temp < 30
       ? isNight ? "#388E3C" : "#81C784"
       : temp < 40
-      ? isNight ? "#BF360C" : "#FF8F00"
-      : isNight ? "#B71C1C" : "#E53935";
+      ? isNight ? "#FF8A65" : "#FF7043"        
+      : isNight ? "#FFB74D" : "#FF5722";        
+  
     setBgColor(color);
   };
 
@@ -273,18 +274,18 @@ function Weather() {
       {weatherData && (
         <AnimatePresence>
          <motion.div key="weather" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-  <p className='location'>{weatherData.location}</p>
   <div className='weather-data'>
     <div className="left-column">
       <img src={weatherData.icon} alt="weather-icon" className='weather-icon' />
       <p className='temperature'>{weatherData.temperature}°C</p>
+      <p className='location'>{weatherData.location}</p>
     </div>
     <div className="right-column">
-      <div className="row">
+      <div className="col">
         <img src={humidity_icon} alt="humidity" />
         <div><p>{weatherData.humidity}%</p><span>Humidity</span></div>
       </div>
-      <div className="row">
+      <div className="col">
         <img src={wind_icon} alt="wind-speed" />
         <div><p>{weatherData.windSpeed} Km/H</p><span>Wind Speed</span></div>
       </div>
@@ -293,7 +294,6 @@ function Weather() {
 </motion.div>
         </AnimatePresence>
       )}
-
       {forecastData.length > 0 && (
         <motion.div className="forecast-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           <h3 className="forecast-title">5-Day Forecast</h3>
