@@ -24,6 +24,7 @@ function Weather() {
   const [bgColor, setBgColor] = useState('#fff');
   const [recentSearches, setRecentSearches] = useState([]);
   const [quote, setQuote] = useState('');
+  const [showHourlyPopup, setShowHourlyPopup] = useState(false);
 
   const allIcons = {
     "01d": clear_icon, "01n": clear_night_icon,
@@ -79,6 +80,16 @@ function Weather() {
     setDebouncedSearch('');
     setQuote('');
   };
+  <motion.button
+  style={{ marginTop: '10px', padding: '8px 14px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 500 }}
+  onClick={() => setShowHourlyPopup(true)}
+  initial={{ scale: 0.9, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{ delay: 0.4 }}
+>
+  View Hourly Forecast
+</motion.button>
+
 
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
@@ -132,6 +143,7 @@ function Weather() {
   };
 
   const search = async (city) => {
+    <div className="hourly-popup"></div>
     if (!city.trim()) return;
     setLoading(true);
     try {
@@ -177,6 +189,56 @@ function Weather() {
     } finally {
       setLoading(false);
     }
+    {showHourlyPopup && (
+      <div className="hourly-popup">
+        <div className="popup-content">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+            <h2>Hourly Forecast</h2>
+            <div className="hourly-forecast">
+              {forecastData.map((item, idx) => (
+                <div key={idx} className="hourly-card">
+                  <p>{new Date(item.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                  <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
+                  <p>{Math.round(item.main.temp)}°C</p>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowHourlyPopup(false)}  // Closes the popup
+              style={{
+                marginTop: '20px',
+                backgroundColor: '#f44336',
+                color: 'white',
+                border: 'none',
+                borderRadius: '20px',
+                cursor: 'pointer',
+              }}
+            >
+              Close
+            </button>
+          </motion.div>
+        </div>
+      </div>
+    )}
+    
+    <motion.button
+  style={{
+    marginTop: '10px',
+    padding: '8px 14px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    borderRadius: '20px',
+    cursor: 'pointer',
+    fontWeight: 500,
+  }}
+  onClick={() => setShowHourlyPopup(true)}  // Toggles the popup
+  initial={{ scale: 0.9, opacity: 0 }}
+  animate={{ scale: 1, opacity: 1 }}
+  transition={{ delay: 0.4 }}
+>
+  View Hourly Forecast
+</motion.button>
   };
 
   useEffect(() => {
@@ -293,6 +355,48 @@ function Weather() {
   </div>
 </motion.div>
         </AnimatePresence>
+      )}
+      <motion.button
+        style={{ marginTop: '10px', padding: '8px 14px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 500 }}
+        onClick={() => setShowHourlyPopup(true)}
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        View Hourly Forecast
+      </motion.button>
+
+      {/* Hourly Popup */}
+      {showHourlyPopup && (
+        <div className="hourly-popup">
+          <div className="popup-content">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+              <h2>Hourly Forecast</h2>
+              <div className="hourly-forecast">
+                {forecastData.map((item, idx) => (
+                  <div key={idx} className="hourly-card">
+                    <p>{new Date(item.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
+                    <p>{Math.round(item.main.temp)}°C</p>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowHourlyPopup(false)}  // Closes the popup
+                style={{
+                  marginTop: '20px',
+                  backgroundColor: '#f44336',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                }}
+              >
+                Close
+              </button>
+            </motion.div>
+          </div>
+        </div>
       )}
       {forecastData.length > 0 && (
         <motion.div className="forecast-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
