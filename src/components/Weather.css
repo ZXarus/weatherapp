@@ -279,3 +279,32 @@
     padding: 8px 14px; /* adjust padding for larger screens */
   }
 }
+.weather {
+  min-height: 100vh;
+  width: 100%; /* Ensure full width */
+  max-width: 100%; /* Prevent overflow */
+  padding: 20px;
+  transition: background-color 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #111;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  position: relative; /* This is important for positioning the date-time container */
+}
+
+.date-time-container {
+  position: absolute; /* Absolute positioning */
+  top: 20px; /* Adjust the distance from the top */
+  right: 20px; /* Adjust the distance from the right */
+  display: flex;
+  flex-direction: column; /* Stack the date and time in separate lines */
+  justify-content: center;
+  align-items: flex-end; /* Align items to the right */
+  color: rgba(10, 10, 10, 0.966);
+  font-size: 20px; /* Adjust the font size as needed */
+}
+
+.date, .time {
+  margin-top: 5px; /* Add space between the date and time */
+}

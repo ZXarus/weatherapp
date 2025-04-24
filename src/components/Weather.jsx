@@ -26,6 +26,7 @@ function Weather() {
   const [quote, setQuote] = useState('');
   const [hourlyForecastData, setHourlyForecastData] = useState([]);
   const [showHourlyPopup, setShowHourlyPopup] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
 
   const allIcons = {
@@ -86,6 +87,13 @@ function Weather() {
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
     if (saved) setRecentSearches(JSON.parse(saved));
+  }, []);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   const saveToRecentSearches = (city) => {
@@ -174,9 +182,7 @@ function Weather() {
   if (forecastRes.ok) {
     const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
     setForecastData(dailyForecasts);
-    
-    // Get hourly forecast data for the next 24 hours
-    const hourlyForecasts = forecastJson.list.slice(0, 8); // 8 * 3 hours = 24 hours
+    const hourlyForecasts = forecastJson.list.slice(0, 8);
     setHourlyForecastData(hourlyForecasts);
   }
     } catch (error) {
@@ -220,6 +226,10 @@ function Weather() {
 
   return (
     <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+      <div className="date-time-container">
+      <span className="date">{new Date().toLocaleDateString()}</span>
+      <span className="time">{new Date().toLocaleTimeString()}</span>
+      </div>
       <motion.div className='search-b0x' initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
         <input
           ref={inputRef}
