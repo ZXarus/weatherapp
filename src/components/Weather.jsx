@@ -24,6 +24,7 @@ function Weather() {
   const [bgColor, setBgColor] = useState('#fff');
   const [recentSearches, setRecentSearches] = useState([]);
   const [quote, setQuote] = useState('');
+  const [hourlyForecastData, setHourlyForecastData] = useState([]);
   const [showHourlyPopup, setShowHourlyPopup] = useState(false);
 
 
@@ -122,10 +123,12 @@ function Weather() {
       if (forecastRes.ok) {
         const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
         setForecastData(dailyForecasts);
-      }
+        const hourlyForecasts = forecastJson.list.slice(0, 8); // 8 * 3 hours = 24 hours
+        setHourlyForecastData(hourlyForecasts);
 
       const randomIndex = Math.floor(Math.random() * quotes.length);
       setQuote(quotes[randomIndex]);
+      }
     } catch (error) {
       console.error("Error fetching weather by coords", error);
     } finally {
@@ -153,17 +156,7 @@ function Weather() {
         location: data.name,
         icon,
       });
-      <motion.button
-  style={{ marginTop: '10px', padding: '8px 14px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 500 }}
-  onClick={() => setShowHourlyPopup(true)}
-  initial={{ scale: 0.9, opacity: 0 }}
-  animate={{ scale: 1, opacity: 1 }}
-  transition={{ delay: 0.4 }}
->
-  View 3-HOUR Forecast
-</motion.button>
-
-
+      
       changeBackground(data.main.temp, isNight);
       saveToRecentSearches(data.name);
 
@@ -176,13 +169,16 @@ function Weather() {
       setQuote(quotes[randomIndex]);
 
       const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-      const forecastRes = await fetch(forecastUrl);
-      const forecastJson = await forecastRes.json();
-      if (forecastRes.ok) {
-        const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
-        setForecastData(dailyForecasts);
-      }
-
+  const forecastRes = await fetch(forecastUrl);
+  const forecastJson = await forecastRes.json();
+  if (forecastRes.ok) {
+    const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
+    setForecastData(dailyForecasts);
+    
+    // Get hourly forecast data for the next 24 hours
+    const hourlyForecasts = forecastJson.list.slice(0, 8); // 8 * 3 hours = 24 hours
+    setHourlyForecastData(hourlyForecasts);
+  }
     } catch (error) {
       console.error("Error in fetching data");
       setWeatherData(null);
@@ -316,13 +312,13 @@ function Weather() {
   View 3-Hour Forecast
 </motion.button>
 
-      {showHourlyPopup && (
+{showHourlyPopup && (
   <div className="hourly-popup">
     <div className="popup-content">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         <h2>Hourly Forecast (Next 24 Hours in 3-hour Intervals)</h2>
         <div className="hourly-forecast">
-          {forecastData.filter((item, idx) => idx % 3 === 0).map((item, idx) => (
+          {hourlyForecastData.map((item, idx) => (
             <div key={idx} className="hourly-card">
               <p>{new Date(item.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
               <img src={allIcons[item.weather[0].icon] || cloud_icon} alt="icon" />
