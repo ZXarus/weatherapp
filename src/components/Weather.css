@@ -295,3 +295,114 @@
     margin-bottom: 10px;
   }
 }
+@media (max-width: 768px) {
+  /* Ensure time and date don't overlap search box on mobile */
+  .date-time {
+    margin-top: 20px; /* Adds some space above the date and time */
+    font-size: 16px; /* Adjust font size */
+  }
+
+  .search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px; /* Add space below the search box */
+  }
+
+  .search-box {
+    width: 80%; /* Adjust width for mobile */
+    max-width: 350px;
+  }
+
+  /* Optional: Adjust weather info or other sections if needed */
+  .weather-info {
+    margin-top: 10px;
+  }
+}
+@media (max-width: 768px) {
+  /* Make the 5-day forecast horizontally scrollable on mobile */
+  .forecast-wrapper {
+    padding: 0 10px;
+    margin-top: 20px; /* Adjust top margin for better spacing */
+  }
+
+  .forecast-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    scroll-snap-type: x mandatory;
+    justify-content: flex-start; /* Make sure items are aligned to the left */
+  }
+
+  .forecast-card {
+    min-width: 100px; /* Adjust this to ensure each card is properly sized */
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    scroll-snap-align: start;
+    backdrop-filter: blur(6px);
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+
+  /* Optional: Hide scrollbar for a cleaner look */
+  .forecast-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Optional: Add smooth scrolling for better mobile experience */
+  .forecast-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+/* ---------------- Date & Time ---------------- */
+.date-time-container {
+  position: absolute;
+  top: 20px; /* Ensure some space from the top */
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(5, 5, 5);
+  gap: 5px; /* Reduced gap to avoid excessive spacing */
+  margin-top: 0; /* Ensure no overlapping with other elements */
+  z-index: 10; /* Ensure it's above other elements */
+}
+
+/* Date and Time */
+.date, .time {
+  margin-top: 5px; /* Maintain space between date and time */
+}
+
+/* ---------------- Responsive Styles ---------------- */
+@media (max-width: 600px) {
+  /* Ensure time and date don't overlap search box on mobile */
+  .date-time-container {
+    top: 10px; /* Reduced space for smaller screens */
+    right: 10px;
+    font-size: 16px; /* Adjust font size for smaller screens */
+    gap: 4px; /* Reduce gap for smaller devices */
+    padding: 5px; /* Add padding for better spacing */
+  }
+
+  .date, .time {
+    margin-top: 3px; /* Reduced margin for better spacing */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Further adjustments for very small screens */
+  .date-time-container {
+    top: 5px; /* Ensure it's always visible */
+    right: 5px;
+    font-size: 14px; /* Adjust for very small screens */
+    gap: 2px; /* Further reduce gap */
+  }
+
+  .date, .time {
+    margin-top: 2px; /* Ensure they are closely spaced */
+  }
+}
