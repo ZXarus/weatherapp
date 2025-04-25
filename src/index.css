@@ -10,7 +10,7 @@
 .app {
   min-height: 100vh;
   display: grid;
-  background: linear-gradient(to bottom right, rgb(252, 53, 53), rgb(250, 223, 70), rgb(1, 250, 237));
+  background: linear-gradient(to bottom right, rgb(241, 3, 3), rgb(252, 215, 4), rgb(1, 250, 237));
   padding: calc(20px + 2vw);
 }
 
@@ -39,7 +39,7 @@
 .search-b0x input,
 .location-btn {
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.967);
 }
 
 .title {
