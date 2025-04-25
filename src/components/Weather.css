@@ -1,237 +1,165 @@
+/* ---------------- Base Layout ---------------- */
 .weather {
-    min-height: 100vh;
-    width: 100%; /* Ensure full width */
-    max-width: 100%; /* Prevent overflow */
-    padding: 20px;
-    transition: background-color 0.5s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #111;
-    overflow-x: hidden; /* Prevent horizontal overflow */
-  }
-  
-  /* Ensure the search box input takes full width on mobile */
-  .search-b0x input {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 20px;
-    outline: none;
-    width: 250px;
-    max-width: 90%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .weather-data {
-    display: flex;
-    margin-top: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .left-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 20px;
-  }
-  
-  .weather-icon {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-  }
-  
-  .temperature {
-    font-size: 32px;
-    font-weight: bold;
-    color: white;
-    margin: 10px 0;
-  }
-  
-  .location {
-    font-size: 20px;
-    color: white;
-    margin-bottom: 10px;
-  }
-  
-  .right-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
-  
-  .col {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 8px 0;
-  }
-  
-  .col img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .col p {
-    margin: 0;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .col span {
-    font-size: 12px;
-    color: #ddd;
-  }
-  
-  .forecast-wrapper {
-    margin-top: 30px;
-    width: 100%;
-    max-width: 700px;
-    padding: 0 10px;
-  }
-  
-  .forecast-title {
-    color: white;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  .forecast-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    padding-bottom: 10px;
-    scroll-snap-type: x mandatory;
-    max-width: 100%; /* Prevent overflow */
-  }
-  
-  .forecast-card {
-    min-width: 100px;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 12px;
-    border-radius: 15px;
-    text-align: center;
-    color: white;
-    scroll-snap-align: start;
-    backdrop-filter: blur(6px);
-  }
-  
-  .forecast-card img {
-    width: 50px;
-    height: 50px;
-    margin: 8px 0;
-  }
-  
-  /* Media Query for smaller screens */
-  @media (max-width: 600px) {
-    .weather-data {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .left-column {
-      margin-right: 0;
-      margin-bottom: 20px;
-    }
-  
-    .forecast-scroll {
-      gap: 8px;
-    }
-  
-    .forecast-card {
-      min-width: 90px;
-    }
-  }
-  
-  @media screen and (max-width: 480px) {
-    .weather {
-      padding: 10px;
-      background-color: #111; /* Ensure background fills the entire screen */
-      min-height: 100vh;
-      width: 100%;
-      max-width: 100%;
-    }
-  
-    .search-b0x input {
-      font-size: 14px;
-    }
-  
-    .temp {
-      font-size: 28px;
-    }
-  
-    .description {
-      font-size: 14px;
-    }
-  
-    .forecast {
-      gap: 10px;
-    }
-  
-    .forecast-day {
-      min-width: 100px;
-      padding: 8px;
-    }
-  
-    .additional-info {
-      flex-direction: column;
-      gap: 10px;
-    }
-  
-    .info-item {
-      flex: 1;
-      padding: 8px;
-      font-size: 14px;
-    }
-  
-    .location-name {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-  }
-  .hourly-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .popup-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 600px;
-    text-align: center;
-  }
-  
-  .hourly-forecast {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  
-  .hourly-card {
-    padding: 10px;
-  }
-  
-  .hourly-card img {
-    width: 50px;
-    height: 50px;
-  }
-  /* Add this to your existing CSS */
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #111;
+  transition: background-color 0.5s ease;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ---------------- Search Box ---------------- */
+.search-b0x input {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  width: 250px;
+  max-width: 90%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------------- Weather Info ---------------- */
+.weather-data {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.weather-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.temperature {
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  margin: 10px 0;
+}
+
+.location {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.col img {
+  width: 40px;
+  height: 40px;
+}
+
+.col p {
+  margin: 0;
+  color: white;
+  font-weight: bold;
+}
+
+.col span {
+  font-size: 12px;
+  color: #ddd;
+}
+
+/* ---------------- Forecast Section ---------------- */
+.forecast-wrapper {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 700px;
+  padding: 0 10px;
+}
+
+.forecast-title {
+  color: white;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.forecast-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  max-width: 100%;
+  justify-content: center; /* ✅ Center on desktop */
+}
+
+.forecast-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.forecast-card {
+  min-width: 100px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  scroll-snap-align: start;
+  backdrop-filter: blur(6px);
+  flex-shrink: 0;
+}
+
+.forecast-card img {
+  width: 50px;
+  height: 50px;
+  margin: 8px 0;
+}
+
+/* ---------------- Hourly Forecast Popup ---------------- */
+.hourly-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+}
 
 .hourly-forecast {
   display: flex;
@@ -245,66 +173,125 @@
   margin: 10px;
 }
 
-@media (max-width: 600px) {
-  .hourly-forecast {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .hourly-card {
-    margin: 5px;
-  }
+.hourly-card img {
+  width: 50px;
+  height: 50px;
 }
+
 .hourly-popup button {
   z-index: 1;
-}
-.hourly-popup button {
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
 }
+
+@media (min-width: 1024px) {
+  .hourly-popup button {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    padding: 8px 14px;
+  }
+}
+
+/* ---------------- Date & Time ---------------- */
+.date-time-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(5, 5, 5);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.date, .time {
+  margin-top: 5px;
+}
+
+/* ---------------- Responsive Styles ---------------- */
 @media (max-width: 600px) {
+  .weather-data {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-column {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .forecast-scroll {
+    gap: 8px;
+  }
+
+  .forecast-card {
+    min-width: 90px;
+  }
+
+  .hourly-forecast {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hourly-card {
+    margin: 5px;
+  }
+
   .hourly-popup button {
     padding: 15px 30px;
     font-size: 18px;
   }
-}
-@media (min-width: 1024px) {
-  .hourly-popup button {
-    position: relative; /* or absolute, depending on your layout */
-    bottom: auto;
-    left: auto;
-    transform: none;
-    padding: 8px 14px; /* adjust padding for larger screens */
+
+  .date-time-container {
+    flex-direction: column;
+    font-size: 16px;
+    gap: 4px;
+    margin-bottom: 10px;
   }
 }
-.weather {
-  min-height: 100vh;
-  width: 100%; /* Ensure full width */
-  max-width: 100%; /* Prevent overflow */
-  padding: 20px;
-  transition: background-color 0.5s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #111;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-  position: relative; /* This is important for positioning the date-time container */
-}
 
-.date-time-container {
-  position: absolute; /* Absolute positioning */
-  top: 20px; /* Adjust the distance from the top */
-  right: 20px; /* Adjust the distance from the right */
-  display: flex;
-  flex-direction: column; /* Stack the date and time in separate lines */
-  justify-content: center;
-  align-items: flex-end; /* Align items to the right */
-  color: rgba(10, 10, 10, 0.966);
-  font-size: 20px; /* Adjust the font size as needed */
-}
+@media (max-width: 480px) {
+  .weather {
+    padding: 10px;
+  }
 
-.date, .time {
-  margin-top: 5px; /* Add space between the date and time */
+  .search-b0x input {
+    font-size: 14px;
+  }
+
+  .temp {
+    font-size: 28px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .forecast-day {
+    min-width: 100px;
+    padding: 8px;
+  }
+
+  .additional-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-item {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .location-name {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
 }

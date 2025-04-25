@@ -10,7 +10,7 @@
 .app {
   min-height: 100vh;
   display: grid;
-  background: linear-gradient(to bottom right, rgb(9, 58, 193), #1799de);
+  background: linear-gradient(to bottom right, rgb(252, 53, 53), rgb(250, 223, 70), rgb(1, 250, 237));
   padding: calc(20px + 2vw);
 }
 

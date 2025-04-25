@@ -52,18 +52,15 @@ function Weather() {
   ];
 
   const changeBackground = (temp, isNight) => {
-    const color = temp < 10
-      ? isNight ? "#0D47A1" : "#4FC3F7"
-      : temp < 20
-      ? isNight ? "#1E88E5" : "#64B5F6"
-      : temp < 30
-      ? isNight ? "#388E3C" : "#81C784"
-      : temp < 40
-      ? isNight ? "#ff8a00" : "#ffac00"        
-      : isNight ? "#ff4200" : "#ff0032";        
+    let color;
+    if (temp < 10) color = isNight ? "#0D47A1" : "#4FC3F7";
+    else if (temp < 20) color = isNight ? "#1E88E5" : "#64B5F6";
+    else if (temp < 30) color = isNight ? "#388E3C" : "#81C784";
+    else if (temp < 40) color = isNight ? "#ff8a00" : "#ffac00";
+    else color = isNight ? "#ff4200" : "#ff0032";
   
     setBgColor(color);
-  };
+  };  
 
   const getCookie = (name) => {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -104,17 +101,16 @@ function Weather() {
     localStorage.setItem('recentSearches', JSON.stringify(updated));
   };
 
-  const fetchWeatherByCoords = async (lat, lon) => {
+  const fetchWeather = async (url) => {
     setLoading(true);
     try {
-      const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-      const response = await fetch(weatherUrl);
+      const response = await fetch(url);
       const data = await response.json();
       if (!response.ok) return alert(data.message || "Location data not found.");
-
+      
       const isNight = data.weather[0]?.icon?.includes('n');
       const icon = allIcons[data.weather[0]?.icon] || cloud_icon;
-
+  
       setWeatherData({
         humidity: data.main.humidity,
         windSpeed: data.wind.speed,
@@ -122,23 +118,20 @@ function Weather() {
         location: data.name,
         icon,
       });
-
+  
       changeBackground(data.main.temp, isNight);
-
-      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+  
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(data.name)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
       const forecastRes = await fetch(forecastUrl);
       const forecastJson = await forecastRes.json();
       if (forecastRes.ok) {
         const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
         setForecastData(dailyForecasts);
-        const hourlyForecasts = forecastJson.list.slice(0, 8); // 8 * 3 hours = 24 hours
+        const hourlyForecasts = forecastJson.list.slice(0, 8);
         setHourlyForecastData(hourlyForecasts);
-
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      setQuote(quotes[randomIndex]);
       }
     } catch (error) {
-      console.error("Error fetching weather by coords", error);
+      console.error("Error fetching weather", error);
     } finally {
       setLoading(false);
     }
@@ -146,52 +139,15 @@ function Weather() {
 
   const search = async (city) => {
     if (!city.trim()) return;
-    setLoading(true);
-    try {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (!response.ok) return;
-
-      const isNight = data.weather[0]?.icon?.includes('n');
-      const defaultIcon = isNight ? clear_night_icon : clear_icon;
-      const icon = allIcons[data.weather[0]?.icon] || defaultIcon;
-
-      setWeatherData({
-        humidity: data.main.humidity,
-        windSpeed: data.wind.speed,
-        temperature: Math.floor(data.main.temp),
-        location: data.name,
-        icon,
-      });
-      
-      changeBackground(data.main.temp, isNight);
-      saveToRecentSearches(data.name);
-
-      if (data.coord?.lat && data.coord?.lon) {
-        document.cookie = `lat=${data.coord.lat}; path=/; max-age=86400`;
-        document.cookie = `lon=${data.coord.lon}; path=/; max-age=86400`;
-      }
-
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      setQuote(quotes[randomIndex]);
-
-      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
-  const forecastRes = await fetch(forecastUrl);
-  const forecastJson = await forecastRes.json();
-  if (forecastRes.ok) {
-    const dailyForecasts = forecastJson.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
-    setForecastData(dailyForecasts);
-    const hourlyForecasts = forecastJson.list.slice(0, 8);
-    setHourlyForecastData(hourlyForecasts);
-  }
-    } catch (error) {
-      console.error("Error in fetching data");
-      setWeatherData(null);
-    } finally {
-      setLoading(false);
-    }
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+    fetchWeather(url);
   };
+
+  const fetchWeatherByCoords = async (lat, lon) => {
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
+    fetchWeather(weatherUrl);
+  };
+  
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -226,10 +182,7 @@ function Weather() {
 
   return (
     <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
-      <div className="date-time-container">
-      <span className="date">{new Date().toLocaleDateString()}</span>
-      <span className="time">{new Date().toLocaleTimeString()}</span>
-      </div>
+
       <motion.div className='search-b0x' initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
         <input
           ref={inputRef}
@@ -243,7 +196,10 @@ function Weather() {
           onKeyDown={(e) => e.key === 'Enter' && setDebouncedSearch(searchInput)}
         />
       </motion.div>
-
+      <div className="date-time-container">
+      <span className="date">{new Date().toLocaleDateString()}</span>
+      <span className="time">{new Date().toLocaleTimeString()}</span>
+      </div>
       <motion.button
         style={{ marginTop: '10px', padding: '8px 14px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '20px', cursor: 'pointer', fontWeight: 500 }}
         onClick={getWeatherByLocation}
