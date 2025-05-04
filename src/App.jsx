@@ -1,6 +1,6 @@
 import React from 'react'
 import Weather from './components/Weather'
-import background from './assets/background.jpeg'
+import background from './assets/background.jpg'
 
 const App = () => {
   return (
