@@ -10,8 +10,12 @@ const App = () => {
         backgroundImage: `url(${background})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        minHeight: '100vh',
+        width: '100%',
+        color: 'white'
       }}
     >
+      
       <h1 className="title">Team Shamrock</h1>
       <Weather />
     </div>

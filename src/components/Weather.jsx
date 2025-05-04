@@ -27,6 +27,7 @@ function Weather() {
   const [hourlyForecastData, setHourlyForecastData] = useState([]);
   const [showHourlyPopup, setShowHourlyPopup] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [timezone, setTimezone] = useState(''); // Added for time zone
 
   const allIcons = {
     '01d': clear_icon, '01n': clear_night_icon,
@@ -101,6 +102,7 @@ function Weather() {
       
       setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
       changeBackground(data.main.temp, isNight);
+      setTimezone(data.timezone); // Set the time zone from API response
       const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(data.name)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
       const forecastRes = await fetch(forecastUrl);
       const forecastJson = await forecastRes.json();
@@ -166,6 +168,9 @@ function Weather() {
     if (lat && lon) fetchWeatherByCoords(lat, lon);
   }, []);
 
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-GB');
+  };
   return (
     <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
 
@@ -304,10 +309,10 @@ function Weather() {
 </motion.div>
         </AnimatePresence>
       )}
-      <div className="date-time-container">
-      <span className="date">{new Date().toLocaleDateString()}</span>
-      <span className="time">{new Date().toLocaleTimeString()}</span>
-      </div>
+        <div className="date-time-container">
+          <span className="date">{formatDate(new Date(currentTime))}</span>
+          <span className="time">{new Date(currentTime).toLocaleTimeString('en-GB')} {timezone && `(IST)`}</span>
+        </div>
       {forecastData.length > 0 && (
         <motion.div className="forecast-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           <h3 className="forecast-title">5-Day Forecast</h3>

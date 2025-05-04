@@ -10,7 +10,6 @@
 .app {
   min-height: 100vh;
   display: grid;
-  background: linear-gradient(to bottom right, rgb(241, 3, 3), rgb(252, 215, 4), rgb(1, 250, 237));
   padding: calc(20px + 2vw);
 }
 
@@ -18,6 +17,7 @@
   .app {
     padding: 20px;
   }
+
   .weather {
     padding: 20px 15px;
   }

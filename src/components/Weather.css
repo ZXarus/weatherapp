@@ -3,16 +3,17 @@
 body {
   margin: 0;
   padding: 0;
-  background: url('/background.jpg') no-repeat center center fixed;
-  background-size: cover;
   font-family: 'Orbitron', sans-serif;
   color: #00ffe7;
+  background: #0a0a0a;
+  min-height: 100vh;
 }
 
-/* ---------------- Base Layout ---------------- */
+/* ---------- Weather Layout ---------- */
 .weather {
-  min-height: 100vh;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
+  margin: 40px auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -32,7 +33,7 @@ body {
   box-shadow: 0 0 15px rgba(0, 255, 231, 0.3);
 }
 
-/* ---------------- Search Box ---------------- */
+/* ---------- Search Box ---------- */
 .search-b0x input {
   padding: 10px 20px;
   font-size: 16px;
@@ -46,7 +47,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 255, 231, 0.3);
 }
 
-/* ---------------- Weather Info ---------------- */
+/* ---------- Weather Info ---------- */
 .weather-data {
   display: flex;
   flex-wrap: wrap;
@@ -114,7 +115,7 @@ body {
   color: #c0fcd3;
 }
 
-/* ---------------- Forecast Section ---------------- */
+/* ---------- Forecast ---------- */
 .forecast-wrapper {
   margin-top: 30px;
   width: 100%;
@@ -127,40 +128,54 @@ body {
   text-align: center;
   margin-bottom: 10px;
 }
-
-.forecast-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
-  max-width: 100%;
-  justify-content: center;
-}
-
 .forecast-scroll::-webkit-scrollbar {
   display: none;
 }
 
-.forecast-card {
-  min-width: 100px;
-  background-color: rgba(25, 25, 50, 0.5);
-  padding: 12px;
-  border-radius: 15px;
-  text-align: center;
-  color: #b9fbc0;
-  scroll-snap-align: start;
-  backdrop-filter: blur(6px);
-  flex-shrink: 0;
-}
 
 .forecast-card img {
   width: 50px;
   height: 50px;
   margin: 8px 0;
 }
+.forecast-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px 5px;
+  scroll-snap-type: x mandatory;
+  max-width: 100%;
+  justify-content: flex-start; /* Changed from center for natural scrolling */
+}
+.forecast-card {
+  flex: 0 0 auto;
+  width: 90px;
+  min-width: 90px;
+  max-width: 100px;
+  background-color: rgba(25, 25, 50, 0.5);
+  padding: 10px;
+  border-radius: 15px;
+  text-align: center;
+  color: #b9fbc0;
+  scroll-snap-align: start;
+  backdrop-filter: blur(6px);
+}
+@media (max-width: 480px) {
+  .forecast-scroll {
+    padding-left: 10px;
+    gap: 12px;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
 
-/* ---------------- Hourly Forecast Popup ---------------- */
+  .forecast-card {
+    min-width: 85px;
+    width: 85px;
+    padding: 10px 5px;
+  }
+}
+
+/* ---------- Hourly Popup ---------- */
 .hourly-popup {
   position: fixed;
   top: 0;
@@ -192,7 +207,7 @@ body {
 .popup-content h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: #333;
+  color: #fff8f8;
 }
 
 .hourly-forecast {
@@ -237,14 +252,11 @@ body {
   }
 }
 
-/* ---------------- Date & Time ---------------- */
+/* ---------- Date & Time ---------- */
 .date-time-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   font-size: 20px;
   font-weight: 500;
   color: rgb(5, 5, 5);
@@ -254,8 +266,18 @@ body {
 .date, .time {
   margin-top: 5px;
 }
-
-/* ---------------- Responsive Styles ---------------- */
+@media (min-width: 601px) {
+  .date-time-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 20px;
+    gap: 10px;
+  }
+}
+/* ---------- Responsive ---------- */
 @media (max-width: 600px) {
   .weather {
     background: transparent;
@@ -263,10 +285,6 @@ body {
 
   .weather .weather-data {
     background: rgba(255, 255, 255, 0.3);
-  }
-
-  .search-b0x input {
-    background-color: rgba(209, 93, 47, 0.7);
   }
 
   .forecast-scroll {
@@ -292,7 +310,6 @@ body {
   }
 
   .date-time-container {
-    flex-direction: column;
     font-size: 16px;
     gap: 4px;
     margin-bottom: 10px;
@@ -335,61 +352,5 @@ body {
   .location-name {
     font-size: 16px;
     margin-bottom: 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  .date-time {
-    margin-top: 20px;
-    font-size: 16px;
-  }
-
-  .search-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-
-  .search-box {
-    width: 80%;
-    max-width: 350px;
-  }
-
-  .weather-info {
-    margin-top: 10px;
-  }
-
-  .forecast-wrapper {
-    padding: 0 10px;
-    margin-top: 20px;
-  }
-
-  .forecast-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    scroll-snap-type: x mandatory;
-    justify-content: flex-start;
-  }
-
-  .forecast-card {
-    min-width: 100px;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 12px;
-    border-radius: 15px;
-    text-align: center;
-    color: white;
-    scroll-snap-align: start;
-    backdrop-filter: blur(6px);
-    flex-shrink: 0;
-  }
-
-  .forecast-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .forecast-scroll {
-    -webkit-overflow-scrolling: touch;
   }
 }
