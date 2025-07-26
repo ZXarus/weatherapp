@@ -16,7 +16,7 @@ const App = () => {
       }}
     >
       
-      <h1 className="title">Team Shamrock</h1>
+      <h1 className="title"> ZXARUS </h1>
       <Weather />
     </div>
   )
