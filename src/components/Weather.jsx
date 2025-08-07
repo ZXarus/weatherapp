@@ -309,10 +309,11 @@ function Weather() {
 </motion.div>
         </AnimatePresence>
       )}
-        <div className="date-time-container">
-          <span className="date">{formatDate(new Date(currentTime))}</span>
-          <span className="time">{new Date(currentTime).toLocaleTimeString('en-GB')} {timezone && `(IST)`}</span>
-        </div>
+        <div className={`date-time-container ${weatherData ? 'top-right' : 'centered'}`}>
+  <span className="date">{formatDate(new Date(currentTime))}</span>
+  <span className="time">{new Date(currentTime).toLocaleTimeString('en-GB')} (IST)</span>
+</div>
+
       {forecastData.length > 0 && (
         <motion.div className="forecast-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           <h3 className="forecast-title">5-Day Forecast</h3>
