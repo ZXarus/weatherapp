@@ -1,12 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;600;700&display=swap');
 
 body {
   margin: 0;
   padding: 0;
   font-family: 'Orbitron', sans-serif;
   color: #00ffe7;
-  background: #0a0a0a;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
   min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.8s ease;
 }
 
 /* ---------- Weather Layout ---------- */
@@ -18,33 +20,63 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: transparent;
-  backdrop-filter: blur(10px);
-  transition: background-color 0.5s ease;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  transition: all 0.5s ease;
   overflow-x: hidden;
   position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.weather:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 255, 231, 0.2);
 }
 
 .weather .weather-data {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px;
   border-radius: 20px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 0 15px rgba(0, 255, 231, 0.3);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.weather .weather-data:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* ---------- Search Box ---------- */
 .search-b0x input {
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
-  border: none;
-  border-radius: 20px;
+  border: 2px solid rgba(0, 255, 231, 0.3);
+  border-radius: 25px;
   outline: none;
-  width: 250px;
+  width: 280px;
   max-width: 90%;
-  background-color: rgba(248, 248, 183, 0.471);
-  color: #0c0c0c;
-  box-shadow: 0 0 10px rgba(0, 255, 231, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.search-b0x input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-b0x input:focus {
+  border-color: #00ffe7;
+  box-shadow: 0 0 20px rgba(0, 255, 231, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 /* ---------- Weather Info ---------- */
@@ -53,11 +85,13 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 20px;
-  background-color: rgba(150, 44, 44, 0.4);
-  padding: 20px;
+  background: linear-gradient(135deg, rgba(0, 255, 231, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  padding: 25px;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 15px rgba(0, 255, 231, 0.3);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
 .left-column {
@@ -74,16 +108,32 @@ body {
 }
 
 .temperature {
-  font-size: 32px;
-  font-weight: bold;
-  color: #00ffe7;
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffe7 0%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 10px 0;
+  text-shadow: 0 0 20px rgba(0, 255, 231, 0.3);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 5px rgba(0, 255, 231, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 15px rgba(0, 255, 231, 0.6));
+  }
 }
 
 .location {
   font-size: 20px;
-  color: #000000;
+  color: #ffffff;
   margin-bottom: 10px;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .right-column {
@@ -107,7 +157,8 @@ body {
 .col p {
   margin: 0;
   color: #00ffe7;
-  font-weight: bold;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .col span {
@@ -152,13 +203,22 @@ body {
   width: 90px;
   min-width: 90px;
   max-width: 100px;
-  background-color: rgba(25, 25, 50, 0.5);
-  padding: 10px;
-  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  border-radius: 18px;
   text-align: center;
   color: #b9fbc0;
   scroll-snap-align: start;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.forecast-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 @media (max-width: 480px) {
   .forecast-scroll {
@@ -192,16 +252,18 @@ body {
 }
 
 .popup-content {
-  background: #1f1f2f;
+  background: rgba(31, 31, 47, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #00ffe7;
-  border-radius: 20px;
-  padding: 30px;
+  border-radius: 25px;
+  padding: 35px;
   max-width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .popup-content h2 {
@@ -219,12 +281,22 @@ body {
 }
 
 .hourly-card {
-  background: #2b2b45;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #c0fcd3;
   padding: 15px 10px;
   width: 80px;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hourly-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hourly-card img {
@@ -244,6 +316,79 @@ body {
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- Date & Time ---------- */
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 500;
+  background: linear-gradient(135deg, rgba(0, 255, 231, 0.1) 0%, rgba(255, 255, 255, 0.08) 100%);
+  backdrop-filter: blur(20px);
+  padding: 20px 28px;
+  border-radius: 25px;
+  border: 1px solid rgba(0, 255, 231, 0.2);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 
+              0 0 20px rgba(0, 255, 231, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.date-time-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.8s ease;
+}
+
+.date-time-container:hover::before {
+  left: 100%;
+}
+
+.date-time-container:hover {
+  background: linear-gradient(135deg, rgba(0, 255, 231, 0.15) 0%, rgba(255, 255, 255, 0.12) 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5), 
+              0 0 30px rgba(0, 255, 231, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(0, 255, 231, 0.4);
+}
+
+/* Centered before search - Hero position */
+.date-time-container.centered {
+  position: relative;
+  margin: 40px auto 30px;
+  transform: none;
+  align-items: center;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Compact position after search */
+.date-time-container.top-right {
+  position: relative;
+  margin: 15px auto 25px;
+  transform: none;
+  align-items: center;
+  padding: 16px 24px;
+  animation: slideIn 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
     transform: translateY(30px);
   }
   to {
@@ -252,39 +397,47 @@ body {
   }
 }
 
-/* ---------- Date & Time ---------- */
-.date-time-container {
-  position: absolute;
-  font-size: 20px;
-  font-weight: 500;
-  color: rgb(5, 5, 5);
-  gap: 10px;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.4s ease;
-  z-index: 500;
-}
-
-/* Centered before search */
-.date-time-container.centered {
-  top: 75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  align-items: center;
-}
-
-/* Top-right after search */
-.date-time-container.top-right {
-  top: 20px;
-  right: 20px;
-  left: auto;
-  transform: none;
-  align-items: flex-end;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 
-.date, .time {
-  margin-top: 5px;
+.date {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.time {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffe7 0%, #64ffda 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 15px rgba(0, 255, 231, 0.4));
+  letter-spacing: 1px;
+  animation: timeGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes timeGlow {
+  from {
+    filter: drop-shadow(0 0 10px rgba(0, 255, 231, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 20px rgba(0, 255, 231, 0.6));
+  }
 }
 
 /* ---------- Responsive ---------- */
@@ -320,9 +473,26 @@ body {
   }
 
   .date-time-container {
-    font-size: 16px;
-    gap: 4px;
-    margin-bottom: 10px;
+    padding: 16px 20px;
+    margin: 20px auto 15px;
+  }
+
+  .date-time-container.centered {
+    margin: 30px auto 20px;
+  }
+
+  .date-time-container.top-right {
+    margin: 12px auto 20px;
+    padding: 14px 18px;
+  }
+
+  .date {
+    font-size: 12px;
+    letter-spacing: 0.8px;
+  }
+
+  .time {
+    font-size: 20px;
   }
 }
 

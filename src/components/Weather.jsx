@@ -27,7 +27,8 @@ function Weather() {
   const [hourlyForecastData, setHourlyForecastData] = useState([]);
   const [showHourlyPopup, setShowHourlyPopup] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [timezone, setTimezone] = useState(''); // Added for time zone
+  const [timezone, setTimezone] = useState(0);
+  const [locationTime, setLocationTime] = useState(new Date());
 
   const allIcons = {
     '01d': clear_icon, '01n': clear_night_icon,
@@ -102,7 +103,8 @@ function Weather() {
       
       setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
       changeBackground(data.main.temp, isNight);
-      setTimezone(data.timezone); // Set the time zone from API response
+      setTimezone(data.timezone);
+      saveToRecentSearches(data.name);
       const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(data.name)}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
       const forecastRes = await fetch(forecastUrl);
       const forecastJson = await forecastRes.json();
@@ -151,9 +153,17 @@ function Weather() {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    const timer = setInterval(() => {
+      const now = new Date();
+      setCurrentTime(now);
+      if (timezone !== 0) {
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const localTime = new Date(utc + (timezone * 1000));
+        setLocationTime(localTime);
+      }
+    }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [timezone]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -170,6 +180,13 @@ function Weather() {
 
   const formatDate = (date) => {
     return date.toLocaleDateString('en-GB');
+  };
+
+  const getTimezoneAbbr = () => {
+    if (!weatherData) return 'Local';
+    const offsetHours = timezone / 3600;
+    if (offsetHours === 0) return 'UTC';
+    return offsetHours > 0 ? `UTC+${offsetHours}` : `UTC${offsetHours}`;
   };
   return (
     <motion.div className='weather' style={{ backgroundColor: bgColor, alignItems: 'center' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
@@ -310,8 +327,8 @@ function Weather() {
         </AnimatePresence>
       )}
         <div className={`date-time-container ${weatherData ? 'top-right' : 'centered'}`}>
-  <span className="date">{formatDate(new Date(currentTime))}</span>
-  <span className="time">{new Date(currentTime).toLocaleTimeString('en-GB')} (IST)</span>
+  <span className="date">{formatDate(weatherData ? locationTime : currentTime)}</span>
+  <span className="time">{(weatherData ? locationTime : currentTime).toLocaleTimeString('en-GB')} ({getTimezoneAbbr()})</span>
 </div>
 
       {forecastData.length > 0 && (
