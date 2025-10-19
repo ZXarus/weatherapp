@@ -28,11 +28,13 @@ body {
   overflow-x: hidden;
   position: relative;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  opacity: 1;
 }
 
 .weather:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 40px rgba(0, 255, 231, 0.2);
+  opacity: 0;
 }
 
 .weather .weather-data {
@@ -61,7 +63,7 @@ body {
   max-width: 90%;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  color: #ffffff;
+  color: #0c0c0c;
   font-family: 'Orbitron', sans-serif;
   font-weight: 400;
   transition: all 0.3s ease;
